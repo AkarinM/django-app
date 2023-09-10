@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import logging.config
+from os import getenv
 from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
@@ -22,19 +23,31 @@ traces_sample_rate=1.0,
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DATABASE_DIR = BASE_DIR / 'database'
+DATABASE_DIR.mkdir(exist_ok=True)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!p%!1pxr2_gtofck$kue$*o_vr7ct2pg!zv8p8u5c@s3wo7e7o'
+SECRET_KEY = getenv(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-!p%!1pxr2_gtofck$kue$*o_vr7ct2pg!zv8p8u5c@s3wo7e7o'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv('DJANGO_DEBUG', '0') == '1'
 
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost']
-INTERNAL_IPS = ['127.0.0.1']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    '0.0.0.0',
+    'localhost'
+] + getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
+INTERNAL_IPS = [
+    "127.0.0.1",
+    "0.0.0.0",
+]
 
 if DEBUG:
     import socket
@@ -64,11 +77,11 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rest_framework',
     'django_filters',
-    'drf_spectacular',
+    # 'drf_spectacular',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -76,11 +89,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'django.middleware.locale.LocaleMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     # 'requestdataapp.middlewares.ThrottlingMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -110,18 +123,18 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DATABASE_DIR / 'db.sqlite3',
     }
 }
 
-CACHE = {
-    'default': {
-        'BACKEND': 'django.core.cache.filebased.FIledBasedCache',
-        'LOCATION': BASE_DIR / 'tmp'
-    }
-}
-
-CACHE_MIDDLEWARE_SECONDS = 200
+# CACHE = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.filebased.FIledBasedCache',
+#         'LOCATION': BASE_DIR / 'tmp'
+#     }
+# }
+#
+# CACHE_MIDDLEWARE_SECONDS = 200
 
 
 # Password validation
@@ -142,6 +155,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CACHES = {
+    "default": {
+        # "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        # "LOCATION": "/var/tmp/django_cache",
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+    }
+}
+CACHE_MIDDLEWARE_SECONDS = 200
+
+# REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -153,17 +181,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
-USE_L10N = True
-
-LOCALE_PATHS = [
-    BASE_DIR / 'locale/'
-]
-
-LANGUAGES = [
-    ('en', _('English')),
-    ('ru', _('Russian'))
-]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -180,49 +197,43 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # LOGIN_REDIRECT_URL = '/shop/'
 
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
-    ],
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'My site project API',
-    'DESCRIPTION': 'My site with shop app and custom auth',
-    'VERSION': '1.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-}
-
-# LOGFILE_NAME = BASE_DIR / 'log.txt'
-# LOGFILE_SIZE = 400
-# LOGFILE_COUNT = 3
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'formatters': {
-#         'verbose': {
-#             'format': '%(asctime)s [%(levelname)s] %(name)s %(message)s',
-#         },
-#     },
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#             'formatter': 'verbose',
-#         },
-#         'logfile': {
-#             'class': 'logging.handlers.RotatingFileHandler',
-#             'filename': LOGFILE_NAME,
-#             'maxBytes': LOGFILE_SIZE,
-#             'backupCount': LOGFILE_COUNT,
-#             'formatter': 'verbose',
-#         },
-#     },
-#     'root': {
-#         'handlers': ['console', 'logfile'],
-#         'level': 'INFO',
-#     },
+# REST_FRAMEWORK = {
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+#     'PAGE_SIZE': 10,
+#     'DEFAULT_FILTER_BACKENDS': [
+#         'django_filters.rest_framework.DjangoFilterBackend',
+#     ],
+#     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 # }
+#
+# SPECTACULAR_SETTINGS = {
+#     'TITLE': 'My site project API',
+#     'DESCRIPTION': 'My site with shop app and custom auth',
+#     'VERSION': '1.0',
+#     'SERVE_INCLUDE_SCHEMA': False,
+# }
+
+LOGLEVEL = getenv('DJANGO_LOGLEVEL', 'info').upper()
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+    },
+    'loggers': {
+        '': {
+            'level': LOGLEVEL,
+            'handlers': [
+                'console',
+            ],
+        },
+    },
+})
