@@ -1,0 +1,18 @@
+{% extends 'shopapp/base.html' %}
+
+{% block title %}
+    Добавление заказа
+{% endblock %}
+
+{% block body %}
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <p><button type="submit">Добавить</button></p>
+        </form>
+    </div>
+    <div>
+        <p><a href="{% url 'shopapp:shop_index' %}">Вернуться назад</a></p>
+    </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'authapp/base.html' %}
+
+{% block title %}
+  User: {{userr.username}}
+{% endblock %}
+
+
+{% block body %}
+
+  <h1>User info</h1>
+  <h2>Detail</h2>
+  <p>Username: {{ userr.username }}</p>
+  <p>Avatar:
+    {% if userr.profile.avatar %}
+      <img src="{{userr.profile.avatar.url}}" alt="{{userr.profile.avatar.name}}"/>
+    {% else %}
+      Нет Аватара
+    {% endif %}
+  </p>
+  <p>First name: {{ userr.first_name }}</p>
+  <p>Last name: {{ userr.last_name }}</p>
+  <p>Email: {{ userr.email }}</p>
+  <p>Bio: {{ userr.profile.bio }}</p>
+
+  {% if user.is_staff or user.pk == userr.pk %}
+    <p><a href="{% url 'authapp:user-update' pk=userr.pk %}">Изменить</a></p>
+  {% endif %}
+
+
+{% endblock %}

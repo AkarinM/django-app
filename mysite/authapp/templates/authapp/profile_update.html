@@ -1,0 +1,22 @@
+{% extends 'shopapp/base.html' %}
+
+{% block title %}
+    Изменение пользователя {{ object.username }}
+{% endblock %}
+
+{% block body %}
+    <div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.as_p}}
+            <p><button type="submit">Изменить</button></p>
+        </form>
+    </div>
+    <div>
+        {% if user.pk != object.user.pk %}
+            <p><a href="{% url 'authapp:users-details' pk=object.user.pk %}">Назад к профилю пользователя {{ object.user.username }}</a></p>
+        {% else %}
+            <p><a href="{% url 'authapp:about-me' %}">Назад к моему профилю {{ object.user.pk }}</a></p>
+        {% endif %}
+    </div>
+{% endblock %}

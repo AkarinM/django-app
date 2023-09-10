@@ -1,0 +1,19 @@
+{% extends 'authapp/base.html' %}
+
+{% block title %}
+    Users
+{% endblock %}
+
+{% block body %}
+    <div>
+        {% if users %}
+            {% for user in users %}
+              <div>
+                <p>{{ forloop.counter }} <a href="{% url 'authapp:users-details' pk=user.pk %}"> {% firstof user.first_name user.username %} </a> </p>
+              </div>
+            {% endfor %}
+        {% else %}
+            <p>Пользователей нет</p>
+        {% endif %}
+    </div>
+{% endblock %}

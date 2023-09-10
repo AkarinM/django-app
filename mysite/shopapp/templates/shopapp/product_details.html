@@ -1,0 +1,37 @@
+{% extends 'shopapp/base.html' %}
+
+{% load i18n %}
+
+{% block title %}
+    {% translate 'Product' %} : {{product.pk}} - {{product.name}}
+{% endblock %}
+
+{% block body %}
+    <div>
+        <p>{% translate 'Name' context 'product name' %}: {{product.name}} </p>
+        {% translate 'no description' as no_description %}
+        <p>{% translate 'Description' %}: {% firstof product.description no_description %}</p>
+        <p>{% translate 'Price' %}: {{ product.price }}</p>
+        {% translate 'no discount' as no_discount %}
+        <p>{% translate 'Discount' %}: product.discount</p>
+        <p>Count: {{ product.count }} unit</p>
+        <p>Count: {{ product.count }} units</p>
+        {% blocktranslate %}
+        <p>Changed: {{ product.changed }}</p>
+        <p>Archived: {{ product.arhive }}</p>
+        {% endblocktranslate %}
+    </div>
+    <div>
+
+        {% url 'shopapp:products-list' as prod_list_url%}
+        {% url 'shopapp:products-delete' as prod_delete_url%}
+        {% blocktranslate %}
+        <p><a href="{{prod_list_url}}">Back</a></p>
+        <p><a href="{{prod_delete_url}}">Archive</a></p>
+        {% endblocktranslate %}
+        {% if perms.shopapp.change_product and product.created_by == user or user.is_superuser %}
+            <p><a href="{% url 'shopapp:products-update' pk=product.pk %}">{% translate 'To change' %}</a></p>
+        {% endif %}
+
+    </div>
+{% endblock %}

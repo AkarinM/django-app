@@ -1,0 +1,21 @@
+{% extends 'shopapp/base.html' %}
+
+{% block title %}
+    Product: {{product.pk}} - {{product.name}} delete
+{% endblock %}
+
+{% block body %}
+    <div>
+        <p> Вы точно хотите удалить?</p>
+    </div>
+    <div>
+        <p><a href="{% url 'shopapp:products-details' pk=object.pk %}">Вернуться назад</a></p>
+    </div>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <p><button type="submit">Удалить</button></p>
+        </form>
+    </div>
+{% endblock %}

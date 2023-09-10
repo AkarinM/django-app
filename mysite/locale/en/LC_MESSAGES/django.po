@@ -1,0 +1,103 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-08-01 20:12+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: mysite/settings.py:130
+msgid "English"
+msgstr ""
+
+#: mysite/settings.py:131
+msgid "Russian"
+msgstr ""
+
+#: shopapp/models.py:19 shopapp/templates/shopapp/product_details.html:6
+msgid "Product"
+msgstr ""
+
+#: shopapp/models.py:20
+msgid "Products"
+msgstr ""
+
+#: shopapp/models.py:36
+msgid "Order"
+msgstr ""
+
+#: shopapp/models.py:37
+msgid "Orders"
+msgstr ""
+
+#: shopapp/templates/shopapp/product_details.html:11
+msgctxt "product name"
+msgid "Name"
+msgstr ""
+
+#: shopapp/templates/shopapp/product_details.html:12
+msgid "no description"
+msgstr ""
+
+#: shopapp/templates/shopapp/product_details.html:13
+msgid "Description"
+msgstr ""
+
+#: shopapp/templates/shopapp/product_details.html:14
+msgid "Price"
+msgstr ""
+
+#: shopapp/templates/shopapp/product_details.html:15
+msgid "no discount"
+msgstr ""
+
+#: shopapp/templates/shopapp/product_details.html:16
+msgid "Discount"
+msgstr ""
+
+#: shopapp/templates/shopapp/product_details.html:17
+#, python-format
+msgid ""
+"\n"
+"        <p>Count: %(product.count)s unit</p>\n"
+"        "
+msgid_plural ""
+"\n"
+"        <p>Count: %(product.count)s units</p>\n"
+"        "
+msgstr[0] ""
+msgstr[1] ""
+
+#: shopapp/templates/shopapp/product_details.html:22
+#, python-format
+msgid ""
+"\n"
+"        <p>Changed: %(product.changed)s</p>\n"
+"        <p>Archived: %(product.arhive)s</p>\n"
+"        "
+msgstr ""
+
+#: shopapp/templates/shopapp/product_details.html:31
+#, python-format
+msgid ""
+"\n"
+"        <p><a href=\"%(prod_list_url)s\">Back</a></p>\n"
+"        <p><a href=\"%(prod_delete_url)s\">Archive</a></p>\n"
+"        "
+msgstr ""
+
+#: shopapp/templates/shopapp/product_details.html:36
+msgid "To change"
+msgstr ""

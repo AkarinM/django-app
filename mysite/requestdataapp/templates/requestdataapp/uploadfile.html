@@ -1,0 +1,27 @@
+{% extends 'requestdataapp/base.html' %}
+
+{% block title %}
+    Upload files
+{% endblock %}
+
+{% block body %}
+    <div class="form-class">
+        <form method="post" , enctype="multipart/form-data">
+            {% csrf_token %}
+            <p><input type="file" id="file" name="file" title="choose file" /></p>
+            <p><button type="submit">
+                Upload
+            </button></p>
+        </form>
+    </div>
+    {% if finish %}
+        <div class="finish-class" style="color: green;">
+            <p> {{finish}}</p>
+        </div>
+    {% endif %}
+    {% if error %}
+        <div class="finish-class" style="color: red;">
+            <p> {{error}} </p>
+        </div>
+    {% endif %}
+{% endblock %}

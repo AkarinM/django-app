@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "python-django"
+version = "0.1.0"
+description = ""
+authors = ["Mihail Prizhanovskiy <vladimirpvo.p@mail.ru>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "4.2.1"
+djangorestframework = "^3.14.0"
+django-filter = "^23.2"
+django-debug-toolbar = "^4.2.0"
+pillow = "^10.0.0"
+gunicorn = "^21.2.0"
+pyyaml = "6.0.1"
+attrs = "23.1.0"
+certifi = "2023.7.22"
+drf-spectacular = "0.26.4"
+rpds-py = "0.9.2"
+jsonschema = "4.17.3"
+jsonschema-specifications = "2023.7.1"
+sentry-sdk = "1.29.2"
+typing-extensions = "4.6.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
