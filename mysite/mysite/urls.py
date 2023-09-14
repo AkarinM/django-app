@@ -36,6 +36,7 @@ urlpatterns += [
     path('request/', include('requestdataapp.urls'), name='request'),
     path('accounts/', include('authapp.urls'), name='auth'),
     path('blogs/', include('blogapp.urls'), name='blogs'),
+    path('shop/', include('shopapp.urls'), name='shop'),
 ]
 
 if settings.DEBUG:

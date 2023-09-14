@@ -127,14 +127,14 @@ DATABASES = {
     }
 }
 
-# CACHE = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.filebased.FIledBasedCache',
-#         'LOCATION': BASE_DIR / 'tmp'
-#     }
-# }
-#
-# CACHE_MIDDLEWARE_SECONDS = 200
+CACHE = {
+    'default': {
+        'BACKEND': 'django.core.cache.filebased.FIledBasedCache',
+        'LOCATION': BASE_DIR / 'tmp'
+    }
+}
+
+CACHE_MIDDLEWARE_SECONDS = 200
 
 
 # Password validation
@@ -155,21 +155,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CACHES = {
-    "default": {
-        # "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
-        # "LOCATION": "/var/tmp/django_cache",
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-    }
-}
-CACHE_MIDDLEWARE_SECONDS = 200
-
-# REST Framework
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -181,6 +166,17 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+USE_L10N = True
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale/'
+]
+
+LANGUAGES = [
+    ('en', _('English')),
+    ('ru', _('Russian'))
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -195,45 +191,106 @@ MEDIA_ROOT = BASE_DIR / 'uploads'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_REDIRECT_URL = '/shop/'
 # LOGIN_REDIRECT_URL = '/shop/'
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-#     'PAGE_SIZE': 10,
-#     'DEFAULT_FILTER_BACKENDS': [
-#         'django_filters.rest_framework.DjangoFilterBackend',
-#     ],
-#     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-# }
-#
-# SPECTACULAR_SETTINGS = {
-#     'TITLE': 'My site project API',
-#     'DESCRIPTION': 'My site with shop app and custom auth',
-#     'VERSION': '1.0',
-#     'SERVE_INCLUDE_SCHEMA': False,
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
-LOGLEVEL = getenv('DJANGO_LOGLEVEL', 'info').upper()
-logging.config.dictConfig({
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'My site project API',
+    'DESCRIPTION': 'My site with shop app and custom auth',
+    'VERSION': '1.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
+
+LOGFILE_NAME = BASE_DIR / 'log.txt'
+LOGFILE_SIZE = 400
+LOGFILE_COUNT = 3
+
+LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'console': {
+        'verbose': {
             'format': '%(asctime)s [%(levelname)s] %(name)s %(message)s',
         },
     },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'console',
+            'formatter': 'verbose',
+        },
+        'logfile': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOGFILE_NAME,
+            'maxBytes': LOGFILE_SIZE,
+            'backupCount': LOGFILE_COUNT,
+            'formatter': 'verbose',
         },
     },
-    'loggers': {
-        '': {
-            'level': LOGLEVEL,
-            'handlers': [
-                'console',
-            ],
-        },
+    'root': {
+        'handlers': ['console', 'logfile'],
+        'level': 'INFO',
     },
-})
+}
+
+LOGLEVEL = getenv('DJANGO_LOGLEVEL', 'info').upper()
+logging.config.dictConfig(
+    {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'console': {
+                'format': '%(asctime)s [%(levelname)s] %(name)s %(message)s',
+            },
+        },
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'console',
+            },
+        },
+        'loggers': {
+            '': {
+                'level': LOGLEVEL,
+                'handlers': [
+                    'console',
+                ],
+            },
+        },
+    }
+)
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'verbose': {
+#             'format': '%(asctime)s [%(levelname)s] %(name)s %(message)s',
+#         },
+#     },
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'verbose',
+#         },
+#         'logfile': {
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': LOGFILE_NAME,
+#             'maxBytes': LOGFILE_SIZE,
+#             'backupCount': LOGFILE_COUNT,
+#             'formatter': 'verbose',
+#         },
+#     },
+#     'root': {
+#         'handlers': ['console', 'logfile'],
+#         'level': 'INFO',
+#     },
+# }

@@ -5,14 +5,15 @@ from rest_framework.routers import DefaultRouter
 from .views import shop_index, ProductCreateView, ProductsListView, ProductDetailsView, \
     ProductUpdateView, ProductDeleteView, OrdersDetailsView, OrdersUpdateView, OrdersDeleteView, OrdersListView, \
     OrdersCreateView, OrdersDataExportView, ProductViewSet, OrderViewSet, LatestProductsFeed, UserOrdersListView, \
-    UserOrderViewSet
+    UserOrdersExportView
+    # UserOrderViewSet, UserOrdersExportView
 
 app_name = 'shopapp'
 
 routers = DefaultRouter()
 routers.register('products', ProductViewSet)
 routers.register('orders', OrderViewSet)
-routers.register('user-orders1', UserOrderViewSet)
+# routers.register('user-orders1', UserOrderViewSet)
 
 
 urlpatterns = [
@@ -31,5 +32,5 @@ urlpatterns = [
     path('orders-details/<int:pk>/update/', OrdersUpdateView.as_view(), name='orders-update'),
     path('orders-details/<int:pk>/delete/', OrdersDeleteView.as_view(), name='orders-delete'),
     path('users/<int:user_id>/orders/', UserOrdersListView.as_view(), name='user-orders'),
-    # path('users/<int:user_id>/orders/export/', UserOrdersExportView.as_view(), name='user-orders-export')
+    path('users/<int:user_id>/orders/export/', UserOrdersExportView.as_view(), name='user-orders-export')
 ]

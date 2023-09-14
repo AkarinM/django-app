@@ -41,26 +41,45 @@ class ProductViewSet(ModelViewSet):
     ]
 
 
-class UserOrderViewSet(ModelViewSet):
-    queryset = Order.objects.prefetch_related('products').select_related('user').all()
-    serializer_class = OrderSerializer
-    lookup_field = 'user_id'
+class UserOrdersExportView(PermissionRequiredMixin, View):
+    permission_required = ['shopapp.view_order']
 
-    @action(methods=['get'], detail=True)
-    def list_user_orders(self, request, user_id=None):
+    def get(self, request, user_id) -> JsonResponse:
         cache_key = f'orders_usrid_{user_id}'
-        queryset = cache.get(cache_key)
+        orders = cache.get(cache_key)
 
-        if queryset is None:
+        if orders is None:
             if not User.objects.filter(pk=user_id).exists():
                 raise Http404
 
-            queryset = self.queryset.filter(user_id=user_id).order_by('pk')
-            cache.set(cache_key, list(queryset), 60)
+            orders = Order.objects.prefetch_related('products').select_related('user').all()
+            cache.set(cache_key, list(orders), 60)
 
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = OrderSerializer(orders, many=True)
 
-        return Response(serializer.data)
+        return JsonResponse({'orders': serializer.data})
+
+
+# class UserOrderViewSet(ModelViewSet):
+#     queryset = Order.objects.prefetch_related('products').select_related('user').all()
+#     serializer_class = OrderSerializer
+#     lookup_field = 'user_id'
+#
+#     @action(methods=['get'], detail=True)
+#     def list_user_orders(self, request, user_id=None):
+#         cache_key = f'orders_usrid_{user_id}'
+#         queryset = cache.get(cache_key)
+#
+#         if queryset is None:
+#             if not User.objects.filter(pk=user_id).exists():
+#                 raise Http404
+#
+#             queryset = self.queryset.filter(user_id=user_id).order_by('pk')
+#             cache.set(cache_key, list(queryset), 60)
+#
+#         serializer = self.get_serializer(queryset, many=True)
+#
+#         return Response(serializer.data)
 
 
 class OrderViewSet(ModelViewSet):
